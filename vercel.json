@@ -1,32 +1,6 @@
 
   "cleanUrls": true,
   "trailingSlash": false,
-  "rewrites": [
-    {
-      "source": "/onboarding",
-      "destination": "/onboarding/index.html"
-    },
-    {
-      "source": "/branding",
-      "destination": "/branding/index.html"
-    },
-    {
-      "source": "/web",
-      "destination": "/web/index.html"
-    },
-    {
-      "source": "/marketing",
-      "destination": "/marketing/index.html"
-    },
-    {
-      "source": "/investigacion",
-      "destination": "/investigacion/index.html"
-    },
-    {
-      "source": "/contenido",
-      "destination": "/contenido/index.html"
-    }
-  ],
   "headers": [
     {
       "source": "/clientes/(.*)",
