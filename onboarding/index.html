@@ -337,7 +337,7 @@ nav {
 
     <div class="services">
 
-      <div class="svc rv" id="svc-branding" onclick="elegir('branding')" data-href="/branding">
+      <div class="svc rv" id="svc-branding" onclick="select('branding')" data-href="/branding">
         <span class="svc-num">01</span>
         <div>
           <div class="svc-name">Branding</div>
@@ -354,7 +354,7 @@ nav {
         </div>
       </div>
 
-      <div class="svc rv" id="svc-web" onclick="elegir('web')" data-href="/web">
+      <div class="svc rv" id="svc-web" onclick="select('web')" data-href="/web">
         <span class="svc-num">02</span>
         <div>
           <div class="svc-name">Web</div>
@@ -371,7 +371,7 @@ nav {
         </div>
       </div>
 
-      <div class="svc rv" id="svc-marketing-digital" onclick="elegir('marketing-digital')" data-href="/marketing">
+      <div class="svc rv" id="svc-marketing-digital" onclick="select('marketing-digital')" data-href="/marketing">
         <span class="svc-num">03</span>
         <div>
           <div class="svc-name">Marketing Digital</div>
@@ -388,7 +388,7 @@ nav {
         </div>
       </div>
 
-      <div class="svc rv" id="svc-investigacion" onclick="elegir('investigacion')" data-href="/investigacion">
+      <div class="svc rv" id="svc-investigacion" onclick="select('investigacion')" data-href="/investigacion">
         <span class="svc-num">04</span>
         <div>
           <div class="svc-name">Investigación</div>
@@ -405,7 +405,7 @@ nav {
         </div>
       </div>
 
-      <div class="svc rv" id="svc-contenido-visual" onclick="elegir('contenido-visual')" data-href="/contenido">
+      <div class="svc rv" id="svc-contenido-visual" onclick="select('contenido-visual')" data-href="/contenido">
         <span class="svc-num">05</span>
         <div>
           <div class="svc-name">Contenido Visual</div>
@@ -480,7 +480,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
 // ── Check si viene con ?servicio= desde la landing ──
 const params = new URLSearchParams(window.location.search);
 const presel = params.get('servicio');
-if (presel) elegir(presel);
+if (presel) select(presel);
 
 // ── Selección ──
 let selected = null;
@@ -492,7 +492,7 @@ const names = {
   'contenido-visual': 'Contenido Visual'
 };
 
-function elegir(slug) {
+function select(slug) {
   // Deselect all
   document.querySelectorAll('.svc').forEach(s => s.classList.remove('selected'));
   // Select
