@@ -674,20 +674,28 @@ textarea.fi { min-height: 88px; }
 
     <div class="data-grid rv">
       <div>
-        <label class="data-label" for="f-nombre">Tu nombre</label>
+        <label class="data-label" for="f-nombre">Tu nombre <span class="req" style="margin-left:6px;">Requerido</span></label>
         <input class="fi" id="f-nombre" type="text" placeholder="Ej. María García">
+        <div class="err-msg" id="err-nombre">Necesitamos tu nombre para continuar.</div>
       </div>
       <div>
-        <label class="data-label" for="f-empresa">Nombre de la empresa o marca</label>
+        <label class="data-label" for="f-empresa">Nombre de la empresa o marca <span class="req" style="margin-left:6px;">Requerido</span></label>
         <input class="fi" id="f-empresa" type="text" placeholder="Ej. Raíz Arquitectura">
+        <div class="err-msg" id="err-empresa">Cuéntanos el nombre de tu empresa o marca.</div>
       </div>
       <div>
         <label class="data-label" for="f-sector">Sector o industria</label>
         <input class="fi" id="f-sector" type="text" placeholder="Ej. Salud, Tecnología, Alimentos...">
       </div>
       <div>
-        <label class="data-label" for="f-email">Tu correo</label>
+        <label class="data-label" for="f-email">Tu correo <span class="req" style="margin-left:6px;">Requerido</span></label>
         <input class="fi" id="f-email" type="email" placeholder="hola@tuempresa.com">
+        <div class="err-msg" id="err-email">Necesitamos tu correo para darte seguimiento.</div>
+      </div>
+      <div>
+        <label class="data-label" for="f-telefono">Tu teléfono (WhatsApp) <span class="req" style="margin-left:6px;">Requerido</span></label>
+        <input class="fi" id="f-telefono" type="tel" placeholder="Ej. 442 123 4567">
+        <div class="err-msg" id="err-telefono">Necesitamos tu teléfono para contactarte por WhatsApp.</div>
       </div>
     </div>
 
@@ -1016,6 +1024,8 @@ textarea.fi { min-height: 88px; }
 ═══════════════════════════════ */
 let cur = 0;
 const KEY = 'pstudio_brief_branding';
+// Pega aquí la URL del webhook de Make.com cuando armes el escenario
+const MAKE_WEBHOOK_URL = 'PEGA_AQUI_TU_URL_DE_MAKE';
 
 // Guardar en localStorage
 function save() {
@@ -1030,6 +1040,7 @@ function restore() {
     const set = (id, v) => { const el = document.getElementById(id); if (el && v) el.value = v; };
     set('f-nombre', d.nombre); set('f-empresa', d.empresa);
     set('f-sector', d.sector); set('f-email', d.email);
+    set('f-telefono', d.telefono);
     set('f-queHace', d.queHace); set('f-porQue', d.porQue);
     set('f-cliente', d.cliente); set('f-problema', d.problema);
     set('f-sentimiento', d.sentimiento); set('f-dif', d.dif);
@@ -1059,6 +1070,7 @@ function getData() {
   return {
     nombre: fv('f-nombre'), empresa: fv('f-empresa'),
     sector: fv('f-sector'), email: fv('f-email'),
+    telefono: fv('f-telefono'),
     queHace: fv('f-queHace'), porQue: fv('f-porQue'),
     tieneId: cv('c-tieneId'),
     cliente: fv('f-cliente'), problema: fv('f-problema'),
@@ -1093,8 +1105,13 @@ function required(id, errId) {
 }
 
 function next1() {
-  if (!required('f-queHace', 'err-queHace')) return;
-  go(2);
+  let ok = true;
+  if (!required('f-nombre', 'err-nombre')) ok = false;
+  if (!required('f-empresa', 'err-empresa')) ok = false;
+  if (!required('f-email', 'err-email')) ok = false;
+  if (!required('f-telefono', 'err-telefono')) ok = false;
+  if (!required('f-queHace', 'err-queHace')) ok = false;
+  if (ok) go(2);
 }
 function next2() {
   let ok = true;
@@ -1160,7 +1177,8 @@ initReveal();
    RESUMEN + DIAGNÓSTICO IA
 ═══════════════════════════════ */
 const sumMap = [
-  ['empresa','Empresa'], ['sector','Sector'], ['queHace','¿Qué hace?'],
+  ['nombre','Nombre'], ['empresa','Empresa'], ['sector','Sector'],
+  ['email','Email'], ['telefono','Teléfono'], ['queHace','¿Qué hace?'],
   ['porQue','¿Por qué ahora?'], ['tieneId','Identidad actual'],
   ['cliente','Cliente ideal'], ['problema','Problema que resuelve'],
   ['comoLlegan','Cómo lo encuentran'], ['sentimiento','Antes / después'],
@@ -1235,6 +1253,16 @@ async function enviar() {
   const btn = document.getElementById('btnEnviar');
   btn.textContent = 'Enviando...'; btn.disabled = true;
   const d = getData();
+
+  // Make.com → Notion CRM + notificación a Ross (no bloquea el flujo si falla)
+  if (MAKE_WEBHOOK_URL && !MAKE_WEBHOOK_URL.startsWith('PEGA_AQUI')) {
+    fetch(MAKE_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ servicio: 'branding', ...d })
+    }).catch(() => {});
+  }
+
   try {
     const res = await fetch('https://formspree.io/f/mojzpwjq', {
       method: 'POST',
