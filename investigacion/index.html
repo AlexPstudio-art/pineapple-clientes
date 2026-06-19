@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Brief Investigación · Pineapple Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;700;900&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'NimbusSans';src:url('../fonts/NimbusSanL-Reg.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'NimbusSans';src:url('../fonts/NimbusSanL-Bol.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--y:#FFD600;--b:#000;--w:#fff;--g:#555;--gl:#888;--bdk:#1c1c1c;--blt:#e0e0e0;--fh:'Barlow Condensed',sans-serif;--fb:'NimbusSans',Helvetica,Arial,sans-serif;--px:64px;--nh:76px;}
+body{background:var(--b);color:var(--w);font-family:var(--fb);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nh);background:var(--b);border-bottom:1px solid var(--bdk);display:flex;align-items:center;justify-content:space-between;padding:0 var(--px);}
+.ns{font-family:var(--fb);font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gl);opacity:0;transition:opacity .3s;}
+.ns.show{opacity:1;}
+.pb{position:fixed;top:var(--nh);left:0;height:2px;background:var(--y);z-index:199;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.step{display:none;}.step.active{display:block;animation:fu .35s ease forwards;}
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.sw{padding:calc(var(--nh) + 72px) var(--px) 96px;min-height:100vh;position:relative;overflow:hidden;}
+.sw.bk{background:var(--b);color:var(--w);}.sw.wh{background:var(--w);color:var(--b);}
+.bgn{font-family:var(--fh);font-size:clamp(140px,22vw,260px);font-weight:900;line-height:1;letter-spacing:-.04em;position:absolute;right:var(--px);top:calc(var(--nh)+40px);pointer-events:none;user-select:none;opacity:.04;}
+.bk .bgn{color:var(--w);}.wh .bgn{color:var(--b);}
+.sh{max-width:700px;margin-bottom:56px;}
+.ey{font-size:11px;font-weight:400;letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:14px;}
+.ey::before{content:'';display:block;width:20px;height:1px;background:var(--y);}
+.bk .ey{color:var(--gl);}.wh .ey{color:var(--g);}
+.st{font-family:var(--fh);font-size:clamp(52px,8vw,96px);font-weight:900;line-height:.91;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:18px;}
+.sd{font-size:15px;line-height:1.75;max-width:500px;}
+.bk .sd{color:var(--gl);}.wh .sd{color:var(--g);}
+.fw{max-width:660px;}
+.fd{margin-bottom:40px;}
+.fq{font-family:var(--fb);font-size:16px;font-weight:700;line-height:1.4;margin-bottom:5px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;}
+.bk .fq{color:var(--w);}.wh .fq{color:var(--b);}
+.rq{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;background:var(--y);color:var(--b);padding:2px 7px;flex-shrink:0;}
+.fh{font-size:12px;font-style:italic;line-height:1.55;margin-bottom:10px;}
+.bk .fh{color:#606060;}.wh .fh{color:#999;}
+.fi{width:100%;padding:13px 15px;font-family:var(--fb);font-size:14px;border-left:3px solid var(--y);outline:none;resize:vertical;transition:border-color .15s,background .15s;min-height:50px;}
+textarea.fi{min-height:88px;}
+.bk .fi{background:#0c0c0c;border:1px solid var(--bdk);border-left:3px solid var(--y);color:var(--w);}
+.bk .fi::placeholder{color:#3a3a3a;font-style:italic;}
+.bk .fi:focus{background:#111;border-color:#444;border-left-color:var(--w);}
+.bk .fi.er{border-left-color:#f44!important;}
+.wh .fi{background:#f7f7f7;border:1px solid var(--blt);border-left:3px solid var(--y);color:var(--b);}
+.wh .fi::placeholder{color:#bbb;font-style:italic;}
+.wh .fi:focus{background:var(--w);border-color:#ccc;border-left-color:var(--b);}
+.wh .fi.er{border-left-color:#f44!important;}
+.em{font-size:11px;color:#f55;margin-top:5px;display:none;font-weight:700;letter-spacing:.04em;}
+.em.show{display:block;}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px;max-width:660px;}
+.dl{display:block;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:7px;}
+.bk .dl{color:#555;}.wh .dl{color:var(--g);}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px;}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;font-family:var(--fb);font-size:13px;cursor:pointer;user-select:none;transition:all .12s;line-height:1;border:1.5px solid;}
+.cd{width:6px;height:6px;border-radius:50%;flex-shrink:0;transition:background .12s;}
+.bk .chip{background:#0e0e0e;border-color:#252525;color:var(--gl);}
+.bk .cd{background:#333;}
+.bk .chip:hover{background:#1a1500;border-color:var(--y);color:var(--w);}
+.bk .chip.sel{background:var(--y);border-color:var(--y);color:var(--b);font-weight:700;}
+.bk .chip.sel .cd{background:#000;}
+.wh .chip{background:#f2f2f2;border-color:#e0e0e0;color:var(--g);}
+.wh .cd{background:#ccc;}
+.wh .chip:hover{background:#fffbe0;border-color:var(--y);color:var(--b);}
+.wh .chip.sel{background:var(--b);border-color:var(--b);color:var(--y);font-weight:700;}
+.wh .chip.sel .cd{background:var(--y);}
+.nb{display:flex;align-items:center;justify-content:space-between;padding-top:56px;margin-top:12px;max-width:660px;}
+.bk .nb{border-top:1px solid var(--bdk);}.wh .nb{border-top:1px solid var(--blt);}
+.bb{font-family:var(--fb);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:none;border:none;cursor:pointer;padding:12px 0;transition:color .15s;display:flex;align-items:center;gap:8px;}
+.bk .bb{color:#444;}.bk .bb:hover{color:var(--w);}
+.wh .bb{color:#bbb;}.wh .bb:hover{color:var(--b);}
+.bb:disabled{opacity:0;pointer-events:none;}
+.bn{font-family:var(--fh);font-weight:900;font-size:20px;letter-spacing:.04em;text-transform:uppercase;background:var(--y);color:var(--b);border:none;padding:15px 38px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:opacity .15s,transform .1s;}
+.bn:hover{opacity:.87;transform:translateY(-1px)}.bn:active{transform:translateY(0)}.bn:disabled{opacity:.5;pointer-events:none;}
+.dw{background:var(--b);border-left:4px solid var(--y);padding:32px 36px;margin-bottom:44px;max-width:660px;}
+.de{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--y);margin-bottom:12px;}
+.dt{font-family:var(--fh);font-weight:700;font-size:clamp(18px,2.2vw,26px);line-height:1.32;color:var(--w);}
+.dl2{display:flex;align-items:center;gap:14px;padding:20px 0;}
+.sp{width:30px;height:30px;border:2px solid #333;border-top-color:var(--y);border-radius:50%;animation:sp .7s linear infinite;flex-shrink:0;}
+@keyframes sp{to{transform:rotate(360deg)}}
+.ll{font-size:11px;color:var(--gl);letter-spacing:.12em;text-transform:uppercase;}
+.sl{max-width:660px;margin-bottom:8px;}
+.sr{display:flex;gap:20px;padding:13px 0;border-bottom:1px solid var(--blt);}
+.sr:last-child{border-bottom:none;}
+.sk{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g);width:170px;flex-shrink:0;padding-top:2px;}
+.sv{font-size:13px;color:var(--b);line-height:1.55;}
+.ch{min-height:70vh;background:var(--b);padding:calc(var(--nh)+80px) var(--px) 80px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;}
+.ci{position:absolute;top:50%;right:var(--px);transform:translateY(-50%);width:300px;height:300px;opacity:.05;pointer-events:none;}
+.cc{width:52px;height:52px;background:var(--y);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:28px;}
+.ct{font-family:var(--fh);font-size:clamp(80px,14vw,160px);font-weight:900;line-height:.88;letter-spacing:-.02em;text-transform:uppercase;color:var(--w);margin-bottom:24px;}
+.ct em{font-style:normal;color:var(--y);}
+.cb{font-size:15px;color:var(--gl);line-height:1.8;max-width:460px;margin-bottom:36px;}
+.wa{display:inline-flex;align-items:center;gap:12px;background:var(--y);color:var(--b);font-family:var(--fb);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;padding:15px 30px;transition:opacity .2s;}
+.wa:hover{opacity:.85;}
+.pr{background:var(--w);padding:96px var(--px);}
+.pe{font-size:11px;font-weight:400;letter-spacing:.2em;text-transform:uppercase;color:var(--g);margin-bottom:10px;display:flex;align-items:center;gap:14px;}
+.pe::before{content:'';display:block;width:20px;height:1px;background:var(--y);}
+.ph{font-family:var(--fh);font-size:clamp(40px,6vw,68px);font-weight:700;text-transform:uppercase;color:var(--b);line-height:1;margin-bottom:60px;}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.pc{background:#f5f5f5;padding:32px 24px 28px;border-top:3px solid transparent;}
+.pc:first-child{border-top-color:var(--y);background:#fffce8;}
+.pn{font-family:var(--fh);font-weight:900;font-size:60px;line-height:1;color:#e0e0e0;margin-bottom:12px;}
+.pc:first-child .pn{color:#ffe566;}
+.pt{font-family:var(--fb);font-weight:700;font-size:13px;color:var(--b);margin-bottom:8px;}
+.pd{font-size:12px;color:var(--g);line-height:1.6;margin-bottom:14px;}
+.pm{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--y);background:var(--b);display:inline-block;padding:3px 9px;}
+.sf{background:var(--b);border-top:1px solid var(--bdk);padding:44px var(--px);display:grid;grid-template-columns:1fr auto;align-items:center;gap:40px;}
+.ftl{font-family:var(--fh);font-size:12px;font-weight:300;letter-spacing:.2em;text-transform:uppercase;color:var(--g);margin-top:10px;}
+.fcp{font-size:11px;color:var(--g);margin-top:5px;}
+.fc{display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+.fl{font-size:13px;color:var(--gl);text-decoration:none;display:flex;align-items:center;gap:9px;transition:color .2s;}
+.fl:hover{color:var(--y);}
+.rv{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease;}
+.rv.on{opacity:1;transform:none;}
+@media(max-width:768px){:root{--px:22px;--nh:64px;}.dg{grid-template-columns:1fr;}.pg{grid-template-columns:1fr;}.bgn{display:none;}.sf{grid-template-columns:1fr;}.fc{align-items:flex-start;}}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none;}.step.active{animation:none;}}
+</style>
+</head>
+<body>
+<div class="pb" id="pb"></div>
+<nav>
+  <a href="/" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
+    <svg width="36" height="36" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg"><polygon fill="#FFD600" points="173.74 86.43 148.5 101.5 171.59 78.41 194.39 55.61 132.19 63.26 125 91.77 125 26.86 86.43 76.26 101.5 101.5 55.61 55.61 63.26 117.81 91.77 125 26.86 125 76.26 163.57 101.5 148.5 55.61 194.39 117.81 186.74 125 158.23 125 223.14 163.57 173.74 148.5 148.5 194.39 194.39 186.74 132.19 158.23 125 223.14 125 173.74 86.43"/></svg>
+    <svg width="110" height="32" viewBox="0 0 380 120" xmlns="http://www.w3.org/2000/svg"><path fill="#FFD600" d="M105.85,20.43c-5.88-5.2-12.44-6.97-24.89-6.97h-35.83v91.21h20.51v-31.04h19.28c10.53,0,17.5-2.6,22.97-8.34,5.2-5.47,7.8-12.72,7.8-21.06,0-9.85-3.56-18.19-9.85-23.8ZM81.78,56.12H19.97v-25.16h61.81c8.07,0,12.99,4.65,12.99,12.58s-4.92,12.58-12.99,12.58Z"/><rect fill="#FFD600" x="115.7" y="73.51" width="25.16" height="25.16"/><path fill="#fff" d="M190.03,81.47c-1.28-2.12-3.32-3.89-6.12-5.32-2.8-1.43-7.45-2.84-13.93-4.24-2.62-.54-4.28-1.13-4.98-1.77-.72-.61-1.08-1.3-1.08-2.06,0-1.05.44-1.94,1.31-2.67.87-.73,2.17-1.1,3.9-1.1,2.1,0,3.74.49,4.93,1.47.97.8,1.65,2.01,2.08,3.59h14.19c-.65-4.82-2.55-8.35-5.7-10.58-3.22-2.28-7.9-3.42-14.03-3.42-5,0-8.93.63-11.8,1.88-2.87,1.25-5.02,2.98-6.45,5.17-1.43,2.19-2.14,4.52-2.14,6.99,0,3.75,1.4,6.84,4.19,9.27,2.77,2.42,7.41,4.37,13.91,5.83,3.97.87,6.5,1.8,7.6,2.78,1.09.98,1.64,2.09,1.64,3.34,0,1.31-.57,2.46-1.72,3.45-1.15.99-2.78,1.49-4.89,1.49-2.84,0-5.02-.97-6.55-2.91-.78-1-1.33-2.41-1.68-4.17h-14.28c.44,4.76,2.21,8.7,5.31,11.8,3.14,3.14,8.8,4.71,16.96,4.71,4.65,0,8.5-.67,11.56-2.01,3.06-1.34,5.43-3.31,7.14-5.91,1.7-2.6,2.55-5.43,2.55-8.51,0-2.62-.64-4.99-1.91-7.1Z"/><path fill="#fff" d="M286.72,72.83c-1.31-1.4-2.81-2.44-4.5-3.14-1.69-.7-3.57-1.05-5.65-1.05-4.26,0-7.76,1.53-10.53,4.58-2.76,3.06-4.14,7.46-4.14,13.23,0,5.15,1.25,9.53,3.75,13.13s6.12,5.4,10.85,5.4c2.36,0,4.5-.5,6.42-1.51,1.44-.76,3.03-2.24,4.78-4.42v5.14h12.47v-47.99h-13.46v16.63ZM285.11,93.22c-1.14,1.33-2.55,2-4.26,2-1.59,0-2.93-.66-4.01-1.98-1.08-1.32-1.62-3.4-1.62-6.24,0-3.03.52-5.19,1.57-6.48,1.05-1.29,2.35-1.93,3.9-1.93,1.77,0,3.23.67,4.39,2.01,1.16,1.34,1.73,3.38,1.73,6.11,0,3.01-.57,5.18-1.7,6.52Z"/><polygon fill="#fff" points="316.82 56.02 303.49 56.02 303.49 104.15 316.82 104.15 316.82 69.38 308.3 69.38 316.82 65.09 316.82 56.02"/><path fill="#fff" d="M355.74,74.69c-3.56-4.04-8.82-6.06-15.78-6.06-6.09,0-10.92,1.72-14.5,5.16-3.58,3.44-5.37,7.81-5.37,13.11,0,5.7,2.12,10.3,6.35,13.82,3.45,2.84,7.97,4.26,13.55,4.26,6.26,0,11.17-1.71,14.72-5.12,3.55-3.42,5.32-7.8,5.32-13.14,0-4.76-1.43-8.76-4.29-12.02ZM344.79,93.78c-1.23,1.46-2.81,2.19-4.73,2.19s-3.48-.74-4.73-2.23-1.88-3.78-1.88-6.88.63-5.33,1.9-6.83,2.87-2.24,4.81-2.24c1.83,0,3.37.74,4.62,2.21,1.24,1.47,1.87,3.72,1.87,6.73,0,3.23-.62,5.58-1.85,7.04Z"/><path fill="#fff" d="M245.15,69.42v20.09c0,2.77-2.24,5.01-5.01,5.01s-5.01-2.24-5.01-5.01v-20.09h-25.84v-13.23l-13.55,6.84v6.38h-3.8v9.76h3.86v12.23c0,3.88.38,6.69,1.13,8.42.75,1.73,1.92,3.02,3.49,3.87,1.57.85,4.02,1.28,7.33,1.28,2.86,0,5.94-.36,9.23-1.08l-.98-9.2c-1.77.57-3.14.85-4.13.85-1.09,0-1.86-.37-2.29-1.11-.28-.48-.42-1.46-.42-2.94v-12.32h12.22v8.8c0,10.25,8.31,18.56,18.56,18.56h0c10.25,0,18.56-8.31,18.56-18.56v-18.56h-13.36Z"/></svg>
+  </a>
+  <span class="ns" id="ns"></span>
+</nav>
+
+<!-- PASO 1 negro — Contexto -->
+<div class="step active" id="s1">
+<div class="sw bk">
+  <div class="bgn">01</div>
+  <div class="sh">
+    <div class="ey rv">Brief Investigación · Paso 1 de 5</div>
+    <h2 class="st rv">Tu empresa<br>y el contexto.</h2>
+    <p class="sd rv">Antes de investigar el mercado, necesitamos entender desde dónde partes.</p>
+  </div>
+  <div class="dg">
+    <div><label class="dl" for="n">Tu nombre</label><input class="fi" id="n" type="text" placeholder="Ej: Rodrigo Sánchez"></div>
+    <div><label class="dl" for="e">Empresa <span class="rq">REQ</span></label><input class="fi" id="e" type="text" placeholder="Ej: Grupo Constructora Norte"><div class="em" id="er-e">Este campo es necesario</div></div>
+    <div><label class="dl" for="s">Sector</label><input class="fi" id="s" type="text" placeholder="Ej: Construcción, Fintech, Retail…"></div>
+    <div><label class="dl" for="em">Email de contacto <span class="rq">REQ</span></label><input class="fi" id="em" type="email" placeholder="tu@empresa.com"><div class="em" id="er-em">Necesitamos un email válido</div></div>
+  </div>
+  <div class="fw">
+    <div class="fd rv">
+      <div class="fq">¿Qué tipo de investigación necesitan? <span class="rq">REQ</span></div>
+      <div class="fh">Ej: "No sabemos quién es realmente nuestro cliente", "Queremos entender por qué nos están eligiendo menos", "Vamos a lanzar algo nuevo y queremos validarlo"</div>
+      <div class="chips" id="c-tipo">
+        <div class="chip" data-v="Entender mejor a nuestros clientes" onclick="multi(this)"><span class="cd"></span>Entender a los clientes</div>
+        <div class="chip" data-v="Analizar la competencia" onclick="multi(this)"><span class="cd"></span>Analizar competencia</div>
+        <div class="chip" data-v="Validar un producto o idea nueva" onclick="multi(this)"><span class="cd"></span>Validar idea nueva</div>
+        <div class="chip" data-v="Estudiar el mercado antes de entrar" onclick="multi(this)"><span class="cd"></span>Estudiar el mercado</div>
+        <div class="chip" data-v="Entender por qué perdemos clientes" onclick="multi(this)"><span class="cd"></span>¿Por qué nos dejan?</div>
+        <div class="chip" data-v="Auditar nuestra marca" onclick="multi(this)"><span class="cd"></span>Auditar nuestra marca</div>
+      </div>
+      <div class="em" id="er-tipo">Elige al menos una opción</div>
+    </div>
+    <div class="fd rv">
+      <div class="fq">¿Por qué lo necesitan ahora? <span class="rq">REQ</span></div>
+      <div class="fh">Ej: "Vamos a lanzar una nueva línea en 3 meses", "Perdimos participación de mercado este año", "Nunca lo habíamos hecho y ya es tiempo"</div>
+      <textarea class="fi" id="porQue" rows="2" placeholder="El contexto que lo hace urgente o importante..."></textarea>
+      <div class="em" id="er-porQue">Cuéntanos el contexto</div>
+    </div>
+    <div class="fd rv">
+      <div class="fq">¿Qué decisión van a tomar con estos datos?</div>
+      <div class="fh">Ej: "Decidir si lanzamos o no", "Elegir entre dos posicionamientos", "Convencer a nuestra dirección de cambiar algo"</div>
+      <textarea class="fi" id="decision" rows="2" placeholder="La investigación es un medio, ¿cuál es el fin?"></textarea>
+    </div>
+  </div>
+  <div class="nb"><button class="bb" disabled>←</button><button class="bn" onclick="n1()">Continuar <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+</div></div>
+
+<!-- PASO 2 blanco — El problema -->
+<div class="step" id="s2">
+<div class="sw wh">
+  <div class="bgn">02</div>
+  <div class="sh">
+    <div class="ey rv">Paso 2 de 5</div>
+    <h2 class="st rv">Lo que<br>no saben.</h2>
+    <p class="sd rv">La investigación empieza por identificar exactamente qué preguntas necesitan respuesta.</p>
+  </div>
+  <div class="fw">
+    <div class="fd rv">
+      <div class="fq" style="color:var(--b)">¿Cuál es la pregunta más importante que quieren responder? <span class="rq">REQ</span></div>
+      <div class="fh">Ej: "¿Por qué nuestros clientes nos dejan de comprar después del primer año?", "¿Quién más podría comprar nuestro producto que no lo está haciendo?", "¿Cómo nos percibe el mercado vs cómo queremos ser percibidos?"</div>
+      <textarea class="fi" id="pregunta" rows="3" placeholder="Si solo pudieras responder una pregunta, ¿cuál sería?"></textarea>
+      <div class="em" id="er-pregunta">Esta es la pregunta clave, es necesaria</div>
+    </div>
+    <div class="fd rv">
+      <div class="fq" style="color:var(--b)">¿Qué creen que es verdad hoy? ¿Y qué quisieran confirmar o desmentir?</div>
+      <div class="fh">Ej: "Creemos que nuestro precio es el problema, pero no estamos seguros", "Pensamos que el cliente ideal es X, pero podría ser Y"</div>
+      <textarea class="fi" id="hipotesis" rows="2" placeholder="Las suposiciones que tienen y quieren poner a prueba..."></textarea>
+    </div>
+    <div class="fd rv">
+      <div class="fq" style="color:var(--b)">¿A quiénes quieren estudiar?</div>
+      <div class="chips" id="c-publico">
+        <div class="chip" data-v="Clientes actuales" onclick="multi(this)"><span class="cd"></span>Clientes actuales</div>
+        <div class="chip" data-v="Clientes que nos dejaron" onclick="multi(this)"><span class="cd"></span>Clientes que se fueron</div>
+        <div class="chip" data-v="Clientes potenciales" onclick="multi(this)"><span class="cd"></span>Clientes potenciales</div>
+        <div class="chip" data-v="Competidores" onclick="multi(this)"><span class="cd"></span>Competidores</div>
+        <div class="chip" data-v="El mercado en general" onclick="multi(this)"><span class="cd"></span>El mercado</div>
+        <div class="chip" data-v="Equipo interno" onclick="multi(this)"><span class="cd"></span>Equipo interno</div>
+      </div>
+    </div>
+    <div class="fd rv">
+      <div class="fq" style="color:var(--b)">¿Tienen acceso a clientes para entrevistar o encuestar?</div>
+      <div class="chips" id="c-acceso">
+        <div class="chip" data-v="Sí, tenemos base de clientes" onclick="one(this,'c-acceso')"><span class="cd"></span>Sí, tenemos base</div>
+        <div class="chip" data-v="Parcialmente" onclick="one(this,'c-acceso')"><span class="cd"></span>Parcialmente</div>
+        <div class="chip" data-v="No, necesitamos reclutarlos" onclick="one(this,'c-acceso')"><span class="cd"></span>No, hay que buscarlos</div>
+      </div>
+    </div>
+  </div>
+  <div class="nb"><button class="bb" onclick="go(1)" style="color:#bbb">← Atrás</button><button class="bn" onclick="n2()">Continuar <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+</div></div>
+
+<!-- PASO 3 negro — Competencia y mercado -->
+<div class="step" id="s3">
+<div class="sw bk">
+  <div class="bgn">03</div>
+  <div class="sh">
+    <div class="ey rv">Paso 3 de 5</div>
+    <h2 class="st rv">Tu posición<br>en el mercado.</h2>
+    <p class="sd rv">Necesitamos entender el entorno en el que operan para hacer una investigación útil.</p>
+  </div>
+  <div class="fw">
+    <div class="fd rv">
+      <div class="fq">¿Quiénes son sus competidores más fuertes?</div>
+      <div class="fh">Nombres, marcas o describe cómo son. No tiene que ser exhaustivo — los 2 o 3 que más les preocupan.</div>
+      <textarea class="fi" id="competencia" rows="2" placeholder="Ej: La cadena que llegó hace 2 años, el competidor digital que cobra menos, el referente nacional..."></textarea>
+    </div>
+    <div class="fd rv">
+      <div class="fq">¿Cómo se diferencian hoy de esa competencia?</div>
+      <div class="fh">Lo que los hace diferentes, aunque sea difícil de articular.</div>
+      <textarea class="fi" id="diferenciador" rows="2" placeholder="Ej: Nuestro servicio es más personalizado, tenemos tecnología que ellos no tienen, llevamos más tiempo en el mercado..."></textarea>
+    </div>
+    <div class="fd rv">
+      <div class="fq">¿Qué tan bien conocen a su cliente ideal hoy?</div>
+      <div class="chips" id="c-conocimiento">
+        <div class="chip" data-v="Muy bien — tenemos datos y los conocemos" onclick="one(this,'c-conocimiento')"><span class="cd"></span>Muy bien</div>
+        <div class="chip" data-v="Medianamente — tenemos intuición pero pocos datos" onclick="one(this,'c-conocimiento')"><span class="cd"></span>Tenemos intuición</div>
+        <div class="chip" data-v="Poco — nunca lo hemos estudiado formalmente" onclick="one(this,'c-conocimiento')"><span class="cd"></span>No lo hemos estudiado</div>
+      </div>
+    </div>
+    <div class="fd rv">
+      <div class="fq">¿Tienen información o investigaciones previas que podamos usar?</div>
+      <div class="chips" id="c-info">
+        <div class="chip" data-v="Sí, tenemos datos internos" onclick="multi(this)"><span class="cd"></span>Datos internos</div>
+        <div class="chip" data-v="Encuestas o entrevistas anteriores" onclick="multi(this)"><span class="cd"></span>Encuestas previas</div>
+        <div class="chip" data-v="Reportes de industria" onclick="multi(this)"><span class="cd"></span>Reportes de industria</div>
+        <div class="chip" data-v="No tenemos nada" onclick="multi(this)"><span class="cd"></span>No tenemos nada</div>
+      </div>
+    </div>
+  </div>
+  <div class="nb"><button class="bb" onclick="go(2)">← Atrás</button><button class="bn" onclick="go(4)">Continuar <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+</div></div>
+
+<!-- PASO 4 blanco — Entregables y formato -->
+<div class="step" id="s4">
+<div class="sw wh">
+  <div class="bgn">04</div>
+  <div class="sh">
+    <div class="ey rv">Paso 4 de 5</div>
+    <h2 class="st rv">¿Qué quieren<br>recibir?</h2>
+    <p class="sd rv">La forma en que se entreguen los resultados es tan importante como los resultados mismos.</p>
+  </div>
+  <div class="fw">
+    <div class="fd rv">
+      <div class="fq" style="color:var(--b)">¿Cómo quieren recibir los resultados?</div>
+      <div class="chips" id="c-formato">
+        <div class="chip" data-v="Reporte ejecutivo en PDF" onclick="multi(this)"><span class="cd"></span>Reporte PDF</div>
+        <div class="chip" data-v="Presentación para equipo directivo" onclick="multi(this)"><span class="cd"></span>Presentación directivos</div>
+        <div class="chip" data-v="Documento de trabajo editable" onclick="multi(this)"><span class="cd"></span>Doc editable</div>
+        <div class="chip" data-v="Sesión de presentación en vivo" onclick="multi(this)"><span class="cd"></span>Sesión en vivo</div>
+        <div class="chip" data-v="Dashboard o resumen visual" onclick="multi(this)"><span class="cd"></span>Dashboard visual</div>
+      </div>
+    </div>
+    <div class="fd rv">
+      <div class="fq" style="color:var(--b)">¿Qué tan profunda necesita ser la investigación?</div>
+      <div class="chips" id="c-profundidad">
+        <div class="chip" data-v="Visión general estratégica" onclick="one(this,'c-profundidad')"><span class="cd"></span>Visión general</div>
+        <div class="chip" data-v="Análisis intermedio con datos" onclick="one(this,'c-profundidad')"><span class="cd"></span>Análisis con datos</div>
+        <div class="chip" data-v="Investigación profunda con fuentes primarias" onclick="one(this,'c-profundidad')"><span class="cd"></span>Profunda · fuentes primarias</div>
+      </div>
+    </div>
+    <div class="fd rv">
+      <div class="fq" style="color:var(--b)">¿Qué quieren que incluyan los entregables?</div>
+      <div class="chips" id="c-entregables">
+        <div class="chip" data-v="Análisis de mercado" onclick="multi(this)"><span class="cd"></span>Análisis de mercado</div>
+        <div class="chip" data-v="Mapa de competidores" onclick="multi(this)"><span class="cd"></span>Mapa de competidores</div>
+        <div class="chip" data-v="Perfiles de buyer persona" onclick="multi(this)"><span class="cd"></span>Buyer personas</div>
+        <div class="chip" data-v="Auditoría de marca" onclick="multi(this)"><span class="cd"></span>Auditoría de marca</div>
+        <div class="chip" data-v="Benchmark de comunicación" onclick="multi(this)"><span class="cd"></span>Benchmark comunicación</div>
+        <div class="chip" data-v="Recomendaciones estratégicas" onclick="multi(this)"><span class="cd"></span>Recomendaciones</div>
+      </div>
+    </div>
+  </div>
+  <div class="nb"><button class="bb" onclick="go(3)" style="color:#bbb">← Atrás</button><button class="bn" onclick="go(5)">Continuar <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+</div></div>
+
+<!-- PASO 5 negro — Tiempos e inversión -->
+<div class="step" id="s5">
+<div class="sw bk">
+  <div class="bgn">05</div>
+  <div class="sh">
+    <div class="ey rv">Paso 5 de 5</div>
+    <h2 class="st rv">Tiempos<br>e inversión.</h2>
+    <p class="sd rv">Último bloque. Esto nos permite preparar una propuesta ajustada a su realidad.</p>
+  </div>
+  <div class="fw">
+    <div class="fd rv">
+      <div class="fq">¿Cuánto piensan invertir en esta investigación?</div>
+      <div class="chips" id="c-budget">
+        <div class="chip" data-v="Menos de $15,000 MXN" onclick="one(this,'c-budget')"><span class="cd"></span>Menos de $15k</div>
+        <div class="chip" data-v="$15,000–$35,000 MXN" onclick="one(this,'c-budget')"><span class="cd"></span>$15k–$35k</div>
+        <div class="chip" data-v="$35,000–$70,000 MXN" onclick="one(this,'c-budget')"><span class="cd"></span>$35k–$70k</div>
+        <div class="chip" data-v="Más de $70,000 MXN" onclick="one(this,'c-budget')"><span class="cd"></span>+$70k</div>
+        <div class="chip" data-v="A definir" onclick="one(this,'c-budget')"><span class="cd"></span>A definir</div>
+      </div>
+    </div>
+    <div class="fd rv">
+      <div class="fq">¿Hay fecha límite para tener los resultados?</div>
+      <div class="chips" id="c-dead">
+        <div class="chip" data-v="Sí, fecha inamovible" onclick="one(this,'c-dead')"><span class="cd"></span>Fecha fija</div>
+        <div class="chip" data-v="Urgente pero hay margen" onclick="one(this,'c-dead')"><span class="cd"></span>Urgente · con margen</div>
+        <div class="chip" data-v="Sin fecha específica" onclick="one(this,'c-dead')"><span class="cd"></span>Sin fecha</div>
+      </div>
+      <input class="fi" id="fecha" type="text" placeholder="Si hay fecha, ¿cuál es y por qué?" style="margin-top:10px;">
+    </div>
+    <div class="fd rv">
+      <div class="fq">¿Algo más que quieras que sepamos?</div>
+      <div class="fh">Restricciones, contexto adicional, o lo que más te preocupa del proyecto.</div>
+      <textarea class="fi" id="extra" rows="3" placeholder="Espacio libre..."></textarea>
+    </div>
+  </div>
+  <div class="nb"><button class="bb" onclick="go(4)">← Atrás</button><button class="bn" onclick="showSum()">Ver mi resumen <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+</div></div>
+
+<!-- PASO 6 resumen blanco -->
+<div class="step" id="s6">
+<div class="sw wh" style="min-height:100vh;">
+  <div class="sh"><div class="ey">Revisión final</div><h2 class="st">Tu brief.</h2><p class="sd">Revisa que todo esté bien antes de enviarlo.</p></div>
+  <div id="dL" class="dl2"><div class="sp"></div><span class="ll">Analizando tu proyecto...</span></div>
+  <div id="dC" class="dw" style="display:none;"><div class="de">Lo que vemos en tu proyecto</div><div class="dt" id="dT"></div></div>
+  <div class="sl" id="sL"></div>
+  <div class="nb" style="border-top-color:var(--blt);max-width:660px;">
+    <button class="bb" onclick="go(5)" style="color:#bbb">← Editar</button>
+    <button class="bn" id="bE" onclick="send()">Enviar brief <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</div></div>
+
+<!-- PASO 7 confirmación -->
+<div class="step" id="s7">
+  <div class="ch">
+    <svg class="ci" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg"><polygon fill="#FFD600" points="173.74 86.43 148.5 101.5 171.59 78.41 194.39 55.61 132.19 63.26 125 91.77 125 26.86 86.43 76.26 101.5 101.5 55.61 55.61 63.26 117.81 91.77 125 26.86 125 76.26 163.57 101.5 148.5 55.61 194.39 117.81 186.74 125 158.23 125 223.14 163.57 173.74 148.5 148.5 194.39 194.39 186.74 132.19 158.23 125 223.14 125 173.74 86.43"/></svg>
+    <div class="cc rv">✓</div>
+    <h2 class="ct rv">Brief<br><em>recibido.</em></h2>
+    <p class="cb rv">Alex revisará tu brief antes del kickoff. Ya tienes la parte más difícil lista.</p>
+    <a href="https://wa.me/522281059335?text=Hola%2C%20acabo%20de%20enviar%20mi%20brief%20de%20investigaci%C3%B3n." class="wa rv" target="_blank"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path fill="currentColor" d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.122 1.532 5.855L.057 23.886l6.196-1.453A11.936 11.936 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.795 9.795 0 01-5.001-1.374l-.358-.213-3.716.871.939-3.43-.234-.37A9.818 9.818 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>Escribirle a Ross</a>
+  </div>
+  <div class="pr">
+    <div class="pe">Lo que viene</div><h3 class="ph">Tu proceso,<br>paso a paso.</h3>
+    <div class="pg">
+      <div class="pc"><div class="pn">01</div><div class="pt">Brief de proyecto</div><div class="pd">Lo acabas de completar. Es la base de todo.</div><span class="pm">Hoy mismo ✓</span></div>
+      <div class="pc"><div class="pn">02</div><div class="pt">Sesión de arranque</div><div class="pd">30–45 min para alinear objetivos, alcance y metodología de investigación.</div><span class="pm">Día 2–3</span></div>
+      <div class="pc"><div class="pn">03</div><div class="pt">Diseño de la investigación</div><div class="pd">Definimos la metodología, instrumentos y muestra antes de arrancar.</div><span class="pm">Día 3–7</span></div>
+      <div class="pc"><div class="pn">04</div><div class="pt">Trabajo de campo</div><div class="pd">Entrevistas, encuestas, análisis documental o benchmarking según el alcance.</div><span class="pm">Semana 2–4</span></div>
+      <div class="pc"><div class="pn">05</div><div class="pt">Análisis y síntesis</div><div class="pd">Procesamos los datos y construimos los hallazgos y recomendaciones.</div><span class="pm">Semana 4–5</span></div>
+      <div class="pc"><div class="pn">06</div><div class="pt">Entrega y presentación</div><div class="pd">Presentamos los resultados en el formato acordado y respondemos dudas.</div><span class="pm">Fecha acordada</span></div>
+    </div>
+  </div>
+  <div style="height:1px;background:var(--bdk);"></div>
+  <footer class="sf">
+    <div><svg width="140" height="40" viewBox="0 0 380 120" xmlns="http://www.w3.org/2000/svg"><path fill="#FFD600" d="M105.85,20.43c-5.88-5.2-12.44-6.97-24.89-6.97h-35.83v91.21h20.51v-31.04h19.28c10.53,0,17.5-2.6,22.97-8.34,5.2-5.47,7.8-12.72,7.8-21.06,0-9.85-3.56-18.19-9.85-23.8ZM81.78,56.12H19.97v-25.16h61.81c8.07,0,12.99,4.65,12.99,12.58s-4.92,12.58-12.99,12.58Z"/><rect fill="#FFD600" x="115.7" y="73.51" width="25.16" height="25.16"/><path fill="#fff" d="M190.03,81.47c-1.28-2.12-3.32-3.89-6.12-5.32-2.8-1.43-7.45-2.84-13.93-4.24-2.62-.54-4.28-1.13-4.98-1.77-.72-.61-1.08-1.3-1.08-2.06,0-1.05.44-1.94,1.31-2.67.87-.73,2.17-1.1,3.9-1.1,2.1,0,3.74.49,4.93,1.47.97.8,1.65,2.01,2.08,3.59h14.19c-.65-4.82-2.55-8.35-5.7-10.58-3.22-2.28-7.9-3.42-14.03-3.42-5,0-8.93.63-11.8,1.88-2.87,1.25-5.02,2.98-6.45,5.17-1.43,2.19-2.14,4.52-2.14,6.99,0,3.75,1.4,6.84,4.19,9.27,2.77,2.42,7.41,4.37,13.91,5.83,3.97.87,6.5,1.8,7.6,2.78,1.09.98,1.64,2.09,1.64,3.34,0,1.31-.57,2.46-1.72,3.45-1.15.99-2.78,1.49-4.89,1.49-2.84,0-5.02-.97-6.55-2.91-.78-1-1.33-2.41-1.68-4.17h-14.28c.44,4.76,2.21,8.7,5.31,11.8,3.14,3.14,8.8,4.71,16.96,4.71,4.65,0,8.5-.67,11.56-2.01,3.06-1.34,5.43-3.31,7.14-5.91,1.7-2.6,2.55-5.43,2.55-8.51,0-2.62-.64-4.99-1.91-7.1Z"/><path fill="#fff" d="M286.72,72.83c-1.31-1.4-2.81-2.44-4.5-3.14-1.69-.7-3.57-1.05-5.65-1.05-4.26,0-7.76,1.53-10.53,4.58-2.76,3.06-4.14,7.46-4.14,13.23,0,5.15,1.25,9.53,3.75,13.13s6.12,5.4,10.85,5.4c2.36,0,4.5-.5,6.42-1.51,1.44-.76,3.03-2.24,4.78-4.42v5.14h12.47v-47.99h-13.46v16.63ZM285.11,93.22c-1.14,1.33-2.55,2-4.26,2-1.59,0-2.93-.66-4.01-1.98-1.08-1.32-1.62-3.4-1.62-6.24,0-3.03.52-5.19,1.57-6.48,1.05-1.29,2.35-1.93,3.9-1.93,1.77,0,3.23.67,4.39,2.01,1.16,1.34,1.73,3.38,1.73,6.11,0,3.01-.57,5.18-1.7,6.52Z"/><polygon fill="#fff" points="316.82 56.02 303.49 56.02 303.49 104.15 316.82 104.15 316.82 69.38 308.3 69.38 316.82 65.09 316.82 56.02"/><path fill="#fff" d="M355.74,74.69c-3.56-4.04-8.82-6.06-15.78-6.06-6.09,0-10.92,1.72-14.5,5.16-3.58,3.44-5.37,7.81-5.37,13.11,0,5.7,2.12,10.3,6.35,13.82,3.45,2.84,7.97,4.26,13.55,4.26,6.26,0,11.17-1.71,14.72-5.12,3.55-3.42,5.32-7.8,5.32-13.14,0-4.76-1.43-8.76-4.29-12.02ZM344.79,93.78c-1.23,1.46-2.81,2.19-4.73,2.19s-3.48-.74-4.73-2.23-1.88-3.78-1.88-6.88.63-5.33,1.9-6.83,2.87-2.24,4.81-2.24c1.83,0,3.37.74,4.62,2.21,1.24,1.47,1.87,3.72,1.87,6.73,0,3.23-.62,5.58-1.85,7.04Z"/><path fill="#fff" d="M245.15,69.42v20.09c0,2.77-2.24,5.01-5.01,5.01s-5.01-2.24-5.01-5.01v-20.09h-25.84v-13.23l-13.55,6.84v6.38h-3.8v9.76h3.86v12.23c0,3.88.38,6.69,1.13,8.42.75,1.73,1.92,3.02,3.49,3.87,1.57.85,4.02,1.28,7.33,1.28,2.86,0,5.94-.36,9.23-1.08l-.98-9.2c-1.77.57-3.14.85-4.13.85-1.09,0-1.86-.37-2.29-1.11-.28-.48-.42-1.46-.42-2.94v-12.32h12.22v8.8c0,10.25,8.31,18.56,18.56,18.56h0c10.25,0,18.56-8.31,18.56-18.56v-18.56h-13.36Z"/></svg>
+    <div class="ftl">Creamos experiencias visuales</div><div class="fcp">Querétaro, México · pstudio.com.mx · © 2025</div></div>
+    <div class="fc"><a href="https://wa.me/522281059335" class="fl" target="_blank"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>228 105 9335</a><a href="mailto:hola@pstudio.com.mx" class="fl"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>hola@pstudio.com.mx</a></div>
+  </footer>
+</div>
+
+<script>
+const KEY='ps_brief_inv';
+let cur=1;
+const io=new IntersectionObserver(es=>{es.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('on'),i*55);io.unobserve(e.target);}});},{threshold:.07});
+function ir(){document.querySelectorAll('.step.active .rv:not(.on)').forEach(el=>io.observe(el));}
+ir();
+function one(el,g){document.querySelectorAll('#'+g+' .chip').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');save();}
+function multi(el){el.classList.toggle('sel');save();}
+function cv(g){const s=[...document.querySelectorAll('#'+g+' .chip.sel')];return s.length?s.map(c=>c.dataset.v).join(', '):'—';}
+function fv(id){const e=document.getElementById(id);return e?e.value.trim():'';}
+function getData(){return{nombre:fv('n'),empresa:fv('e'),sector:fv('s'),email:fv('em'),tipoInvestigacion:cv('c-tipo'),porQue:fv('porQue'),decision:fv('decision'),preguntaClave:fv('pregunta'),hipotesis:fv('hipotesis'),publicoObjetivo:cv('c-publico'),accesoClientes:cv('c-acceso'),competencia:fv('competencia'),diferenciador:fv('diferenciador'),conocimientoCliente:cv('c-conocimiento'),informacionPrevia:cv('c-info'),formatoEntrega:cv('c-formato'),profundidad:cv('c-profundidad'),entregables:cv('c-entregables'),budget:cv('c-budget'),deadline:cv('c-dead'),fecha:fv('fecha'),extra:fv('extra')};}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(getData()));}catch(e){}}
+function restore(){try{const d=JSON.parse(localStorage.getItem(KEY)||'{}');if(!Object.keys(d).length)return;const set=(id,v)=>{const el=document.getElementById(id);if(el&&v)el.value=v;};set('n',d.nombre);set('e',d.empresa);set('s',d.sector);set('em',d.email);set('porQue',d.porQue);set('decision',d.decision);set('pregunta',d.preguntaClave);set('hipotesis',d.hipotesis);set('competencia',d.competencia);set('diferenciador',d.diferenciador);set('fecha',d.fecha);set('extra',d.extra);}catch(e){}}
+document.addEventListener('input',save);
+function req(id,eid){const v=fv(id);const er=document.getElementById(eid);const el=document.getElementById(id);if(!v){el&&el.classList.add('er');er&&er.classList.add('show');return false;}el&&el.classList.remove('er');er&&er.classList.remove('show');return true;}
+function reqChip(gid,eid){const v=cv(gid);const er=document.getElementById(eid);if(!v||v==='—'){er&&er.classList.add('show');return false;}er&&er.classList.remove('show');return true;}
+function n1(){if(!req('e','er-e'))return;if(!req('em','er-em'))return;if(!reqChip('c-tipo','er-tipo'))return;if(!req('porQue','er-porQue'))return;go(2);}
+function n2(){if(!req('pregunta','er-pregunta'))return;go(3);}
+function go(n){document.getElementById('s'+cur).classList.remove('active');const nx=document.getElementById('s'+n);nx.classList.add('active');cur=n;document.getElementById('pb').style.width=(n>=6?100:(n/5)*100)+'%';const lbl=document.getElementById('ns');if(n>=1&&n<=5){lbl.textContent='Paso '+n+' de 5';lbl.classList.add('show');}else lbl.classList.remove('show');window.scrollTo({top:0,behavior:'smooth'});setTimeout(ir,60);}
+const sMap=[['empresa','Empresa'],['sector','Sector'],['tipoInvestigacion','Tipo de investigación'],['porQue','¿Por qué ahora?'],['decision','Decisión a tomar'],['preguntaClave','Pregunta clave'],['hipotesis','Hipótesis'],['publicoObjetivo','Público a estudiar'],['accesoClientes','Acceso a clientes'],['competencia','Competencia'],['diferenciador','Diferenciador'],['conocimientoCliente','Conocimiento del cliente'],['informacionPrevia','Info previa'],['formatoEntrega','Formato de entrega'],['profundidad','Profundidad'],['entregables','Entregables'],['budget','Presupuesto'],['deadline','Fecha límite'],['extra','Notas']];
+async function showSum(){go(6);const d=getData();document.getElementById('sL').innerHTML=sMap.map(([k,l])=>{const v=d[k];if(!v||v==='—')return'';return`<div class="sr"><div class="sk">${l}</div><div class="sv">${v}</div></div>`;}).join('');document.getElementById('dL').style.display='flex';document.getElementById('dC').style.display='none';try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:`Eres director creativo de Pineapple Studio, agencia de branding premium en Querétaro.\nCliente: ${d.empresa||'sin nombre'} · Sector: ${d.sector}\nTipo de investigación: ${d.tipoInvestigacion} · ¿Por qué ahora?: ${d.porQue}\nPregunta clave: ${d.preguntaClave} · Decisión a tomar: ${d.decision}\nHipótesis: ${d.hipotesis} · Diferenciador: ${d.diferenciador}\n\nEscribe UN párrafo (2–3 oraciones) que identifique la verdadera pregunta detrás de su pregunta, diga algo que no articularon pero es fundamental para que la investigación sirva de algo, y apunte qué tipo de hallazgo cambiaría sus decisiones. Directo, estratégico, sin motivacionales, sin mencionar Pineapple. En español.`}]})});const j=await r.json();document.getElementById('dT').textContent=j.content?.[0]?.text||'Recibimos tu brief.';}catch{document.getElementById('dT').textContent='Recibimos tu brief. Alex lo revisará antes del kickoff.';}document.getElementById('dL').style.display='none';document.getElementById('dC').style.display='block';}
+async function send(){const btn=document.getElementById('bE');btn.textContent='Enviando...';btn.disabled=true;const d=getData();try{const r=await fetch('https://formspree.io/f/mojzpwjq',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:`Brief Investigación · ${d.empresa||d.nombre}`,...d})});if(r.ok){try{localStorage.removeItem(KEY);}catch(e){}go(7);}else{btn.textContent='Error — intenta de nuevo';btn.disabled=false;}}catch{go(7);}}
+restore();
+</script>
+</body>
+</html>
