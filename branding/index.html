@@ -1025,7 +1025,7 @@ textarea.fi { min-height: 88px; }
 let cur = 0;
 const KEY = 'pstudio_brief_branding';
 // Pega aquí la URL del webhook de Make.com cuando armes el escenario
-const MAKE_WEBHOOK_URL = 'PEGA_AQUI_TU_URL_DE_MAKE';
+const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/vpdma5xmzj4075ie5gkt7qvzr2x1qcmt';
 
 // Guardar en localStorage
 function save() {
@@ -1256,10 +1256,14 @@ async function enviar() {
 
   // Make.com → Notion CRM + notificación a Ross (no bloquea el flujo si falla)
   if (MAKE_WEBHOOK_URL && !MAKE_WEBHOOK_URL.startsWith('PEGA_AQUI')) {
+    const notas = sumMap
+      .filter(([k]) => !['nombre', 'empresa', 'telefono', 'email'].includes(k))
+      .map(([k, lbl]) => { const v = d[k]; return (v && v !== '—') ? lbl + ': ' + v : null; })
+      .filter(Boolean).join('\n');
     fetch(MAKE_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ servicio: 'branding', ...d })
+      body: JSON.stringify({ servicio: 'branding', nombre: d.nombre, empresa: d.empresa, email: d.email, telefono: d.telefono, notas })
     }).catch(() => {});
   }
 
