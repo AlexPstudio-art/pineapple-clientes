@@ -619,6 +619,7 @@ textarea.fi { min-height: 88px; }
   .step { transition: none; }
   @keyframes stepIn { from { opacity:1; transform:none; } }
 }
+.hp-wrap{position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;}
 </style>
 </head>
 <body>
@@ -643,6 +644,7 @@ textarea.fi { min-height: 88px; }
     <span class="nav-step" id="navStep">Paso 1 de 5</span>
   </div>
 </nav>
+<div class="hp-wrap" aria-hidden="true"><label for="hp-site">Dejar este campo vacío</label><input type="text" id="hp-site" name="website" tabindex="-1" autocomplete="off"></div>
 
 <!-- ══════════════════════════════════════
      PASO 0 · BIENVENIDA
@@ -1245,6 +1247,8 @@ Tono: directo, estratégico, con criterio. Sin frases motivacionales. Sin mencio
    ENVÍO
 ═══════════════════════════════ */
 async function enviar() {
+  const hp = document.getElementById('hp-site');
+  if (hp && hp.value.trim() !== '') { go(7); return; }
   const btn = document.getElementById('btnEnviar');
   btn.textContent = 'Enviando...'; btn.disabled = true;
   const d = getData();
@@ -1257,7 +1261,7 @@ async function enviar() {
     const res = await fetch(MAKE_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ servicio: 'branding', nombre: d.nombre, empresa: d.empresa, email: d.email, telefono: d.telefono, notas })
+      body: JSON.stringify({ servicio: 'branding', nombre: d.nombre, empresa: d.empresa, email: d.email, telefono: d.telefono, notas, website: hp ? hp.value : '' })
     });
     if (res.ok) {
       try { localStorage.removeItem(KEY); } catch(e) {}
