@@ -1254,26 +1254,18 @@ async function enviar() {
   btn.textContent = 'Enviando...'; btn.disabled = true;
   const d = getData();
 
-  // Make.com → Notion CRM + notificación a Ross (no bloquea el flujo si falla)
-  if (MAKE_WEBHOOK_URL && !MAKE_WEBHOOK_URL.startsWith('PEGA_AQUI')) {
-    const notas = sumMap
-      .filter(([k]) => !['nombre', 'empresa', 'telefono', 'email'].includes(k))
-      .map(([k, lbl]) => { const v = d[k]; return (v && v !== '—') ? lbl + ': ' + v : null; })
-      .filter(Boolean).join('\n');
-    fetch(MAKE_WEBHOOK_URL, {
+  const notas = sumMap
+    .filter(([k]) => !['nombre', 'empresa', 'telefono', 'email'].includes(k))
+    .map(([k, lbl]) => { const v = d[k]; return (v && v !== '—') ? lbl + ': ' + v : null; })
+    .filter(Boolean).join('\n');
+
+  try {
+    const r = await fetch(MAKE_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ servicio: 'branding', nombre: d.nombre, empresa: d.empresa, email: d.email, telefono: d.telefono, notas })
-    }).catch(() => {});
-  }
-
-  try {
-    const res = await fetch('https://formspree.io/f/mojzpwjq', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ _subject: `Brief Branding · ${d.empresa || d.nombre}`, ...d })
     });
-    if (res.ok) {
+    if (r.ok) {
       try { localStorage.removeItem(KEY); } catch(e) {}
       go(7);
     } else {
