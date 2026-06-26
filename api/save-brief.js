@@ -12,7 +12,6 @@ module.exports = async function handler(req, res) {
       req.on('end', () => resolve(data));
       req.on('error', reject);
     });
-    // Sanitize control characters before parsing
     const sanitized = raw.replace(/[\u0000-\u001F\u007F]/g, (c) => {
       if (c === '\n') return '\\n';
       if (c === '\r') return '\\r';
@@ -21,8 +20,7 @@ module.exports = async function handler(req, res) {
     });
     body = JSON.parse(sanitized);
   } catch (e) {
-    console.error('BODY PARSE ERROR:', e.message);
-    body = {};
+    return res.status(400).json({ error: 'Invalid body' });
   }
 
   const { nombre, empresa, email, telefono, servicio, notas } = body;
@@ -75,7 +73,6 @@ module.exports = async function handler(req, res) {
 
   if (!githubRes.ok) {
     const err = await githubRes.json();
-    console.error('GitHub error:', JSON.stringify(err));
     return res.status(500).json({ error: 'Error guardando en GitHub', detail: err });
   }
 
