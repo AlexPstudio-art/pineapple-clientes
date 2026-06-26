@@ -1,6 +1,11 @@
 // api/save-brief.js
 module.exports = async function handler(req, res) {
+  console.log('METHOD:', req.method);
+  console.log('BODY TYPE:', typeof req.body);
+  console.log('BODY:', JSON.stringify(req.body));
+
   if (req.method !== 'POST') {
+    console.log('REJECTED: not POST');
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
@@ -39,6 +44,8 @@ module.exports = async function handler(req, res) {
   ].join('\n');
 
   const contentBase64 = Buffer.from(mdContent, 'utf-8').toString('base64');
+
+  console.log('Calling GitHub API for path:', filePath);
 
   const githubRes = await fetch(
     `https://api.github.com/repos/AlexPstudio-art/pineapple-clientes/contents/${filePath}`,
