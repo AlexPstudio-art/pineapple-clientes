@@ -1,21 +1,26 @@
 // api/save-brief.js
 module.exports = async function handler(req, res) {
-  console.log('METHOD:', req.method);
-  console.log('BODY TYPE:', typeof req.body);
-  console.log('BODY:', JSON.stringify(req.body));
-
   if (req.method !== 'POST') {
-    console.log('REJECTED: not POST');
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch { body = {}; }
+  let body = {};
+  try {
+    const raw = await new Promise((resolve, reject) => {
+      let data = '';
+      req.on('data', chunk => { data += chunk; });
+      req.on('end', () => resolve(data));
+      req.on('error', reject);
+    });
+    console.log('RAW BODY:', raw);
+    body = JSON.parse(raw);
+  } catch (e) {
+    console.error('BODY PARSE ERROR:', e.message);
+    body = {};
   }
-  if (!body || typeof body !== 'object') body = {};
 
   const { nombre, empresa, email, telefono, servicio, notas } = body;
+  console.log('PARSED:', { nombre, empresa, email, servicio });
 
   const nombreCliente = empresa || nombre || 'cliente';
   const slug = nombreCliente.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
