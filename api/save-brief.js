@@ -1,9 +1,16 @@
 // api/save-brief.js
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-  const { nombre, empresa, email, telefono, servicio, notas } = req.body;
+
+  let body = req.body;
+  if (typeof body === 'string') {
+    try { body = JSON.parse(body); } catch { body = {}; }
+  }
+  if (!body || typeof body !== 'object') body = {};
+
+  const { nombre, empresa, email, telefono, servicio, notas } = body;
 
   const nombreCliente = empresa || nombre || 'cliente';
   const slug = nombreCliente.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -53,7 +60,7 @@ export default async function handler(req, res) {
 
   if (!githubRes.ok) {
     const err = await githubRes.json();
-    console.error('GitHub error:', err);
+    console.error('GitHub error:', JSON.stringify(err));
     return res.status(500).json({ error: 'Error guardando en GitHub', detail: err });
   }
 
@@ -63,4 +70,4 @@ export default async function handler(req, res) {
     html_url: data.content.html_url,
     path: filePath,
   });
-}
+};
