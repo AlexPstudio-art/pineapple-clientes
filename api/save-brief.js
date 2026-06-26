@@ -12,15 +12,20 @@ module.exports = async function handler(req, res) {
       req.on('end', () => resolve(data));
       req.on('error', reject);
     });
-    console.log('RAW BODY:', raw);
-    body = JSON.parse(raw);
+    // Sanitize control characters before parsing
+    const sanitized = raw.replace(/[\u0000-\u001F\u007F]/g, (c) => {
+      if (c === '\n') return '\\n';
+      if (c === '\r') return '\\r';
+      if (c === '\t') return '\\t';
+      return '';
+    });
+    body = JSON.parse(sanitized);
   } catch (e) {
     console.error('BODY PARSE ERROR:', e.message);
     body = {};
   }
 
   const { nombre, empresa, email, telefono, servicio, notas } = body;
-  console.log('PARSED:', { nombre, empresa, email, servicio });
 
   const nombreCliente = empresa || nombre || 'cliente';
   const slug = nombreCliente.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -45,12 +50,10 @@ module.exports = async function handler(req, res) {
     '',
     '---',
     '',
-    notas || '(sin notas)',
+    notas ? notas.replace(/\\n/g, '\n') : '(sin notas)',
   ].join('\n');
 
   const contentBase64 = Buffer.from(mdContent, 'utf-8').toString('base64');
-
-  console.log('Calling GitHub API for path:', filePath);
 
   const githubRes = await fetch(
     `https://api.github.com/repos/AlexPstudio-art/pineapple-clientes/contents/${filePath}`,
