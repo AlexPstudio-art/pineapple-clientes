@@ -13,20 +13,55 @@ module.exports = async function handler(req, res) {
       req.on('end', () => resolve(data));
       req.on('error', reject);
     });
-    const sanitized = raw.replace(/[\u0000-\u001F\u007F]/g, (c) => {
+
+    // Quitar control characters
+    let sanitized = raw.replace(/[\u0000-\u001F\u007F]/g, (c) => {
       if (c === '\n') return '\\n';
       if (c === '\r') return '\\r';
       if (c === '\t') return '\\t';
       return '';
     });
-    body = JSON.parse(sanitized);
+
+    try {
+      body = JSON.parse(sanitized);
+    } catch (firstErr) {
+      // Fallback: extraer campos manualmente con regex tolerante a comillas
+      // sin escapar dentro de los valores (problema de Make al construir el JSON)
+      const extractField = (key) => {
+        const re = new RegExp(`"${key}"\\s*:\\s*"`);
+        const m = sanitized.match(re);
+        if (!m) return undefined;
+        const start = m.index + m[0].length;
+        // Buscar el cierre: siguiente patrón `",` seguido de comilla de otra key, o `"}` al final
+        const closeRe = /",\s*"[a-zA-Z_]+"\s*:|"\s*}$/g;
+        closeRe.lastIndex = start;
+        const closeMatch = closeRe.exec(sanitized);
+        const end = closeMatch ? closeMatch.index : sanitized.length;
+        return sanitized.slice(start, end);
+      };
+
+      body = {
+        nombre: extractField('nombre'),
+        empresa: extractField('empresa'),
+        email: extractField('email'),
+        telefono: extractField('telefono'),
+        servicio: extractField('servicio'),
+        notas: extractField('notas'),
+      };
+
+      console.error('JSON PARSE FALLBACK USED:', firstErr.message);
+    }
   } catch (e) {
-    console.error('BODY PARSE ERROR:', e.message);
-    console.error('RAW BODY:', raw);
+    console.error('BODY READ ERROR:', e.message);
     return res.status(400).json({ error: 'Invalid body', detail: e.message });
   }
 
   const { nombre, empresa, email, telefono, servicio, notas } = body;
+
+  if (!nombre && !empresa) {
+    console.error('NO NAME FOUND. Raw body:', raw);
+    return res.status(400).json({ error: 'Missing nombre/empresa', raw_preview: raw.slice(0, 200) });
+  }
 
   const nombreCliente = empresa || nombre || 'cliente';
   const slug = nombreCliente.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
