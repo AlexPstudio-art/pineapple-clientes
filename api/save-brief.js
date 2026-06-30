@@ -5,8 +5,9 @@ module.exports = async function handler(req, res) {
   }
 
   let body = {};
+  let raw = '';
   try {
-    const raw = await new Promise((resolve, reject) => {
+    raw = await new Promise((resolve, reject) => {
       let data = '';
       req.on('data', chunk => { data += chunk; });
       req.on('end', () => resolve(data));
@@ -20,7 +21,9 @@ module.exports = async function handler(req, res) {
     });
     body = JSON.parse(sanitized);
   } catch (e) {
-    return res.status(400).json({ error: 'Invalid body' });
+    console.error('BODY PARSE ERROR:', e.message);
+    console.error('RAW BODY:', raw);
+    return res.status(400).json({ error: 'Invalid body', detail: e.message });
   }
 
   const { nombre, empresa, email, telefono, servicio, notas } = body;
@@ -73,6 +76,7 @@ module.exports = async function handler(req, res) {
 
   if (!githubRes.ok) {
     const err = await githubRes.json();
+    console.error('GitHub error:', JSON.stringify(err));
     return res.status(500).json({ error: 'Error guardando en GitHub', detail: err });
   }
 
